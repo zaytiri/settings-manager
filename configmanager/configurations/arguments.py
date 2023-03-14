@@ -3,7 +3,6 @@ from configmanager.configurations.reflection import get_class_variables
 
 
 class Arguments:
-
     def to_list(self, is_saved=None):
         if is_saved is None:
             is_saved = [True, False]
@@ -44,5 +43,11 @@ class Arguments:
 
             setattr(self, arg.name, arg_from_list)
 
-    def add_arguments(self, argsparse):
+    def add_arguments(self, args_parser):
+        raise NotImplementedError("This method needs to be implemented.")
+
+    def process_arguments(self, settings):
+        raise NotImplementedError("This method needs to be implemented.")
+
+    def save_condition(self, settings):
         raise NotImplementedError("This method needs to be implemented.")

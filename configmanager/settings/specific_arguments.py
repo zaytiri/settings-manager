@@ -2,10 +2,17 @@ import argparse
 
 from configmanager.configurations.argument import Argument
 from configmanager.configurations.arguments import Arguments
+from configmanager.services.directory import Directory
+from configmanager.utils.log import throw
 
 
 class Specific(Arguments):
     are_configs_saved = False
+
+    def save_condition(self, settings):
+        if self.alias.name in settings[0].user_arguments:
+            return True
+        return False
 
     def __init__(self):
         self.alias = Argument(name='alias',
@@ -56,36 +63,77 @@ class Specific(Arguments):
     def set_are_configs_saved(self, are_configs_saved):
         self.are_configs_saved = are_configs_saved
 
-    def add_arguments(self, argument_parser):
-        argument_parser.add_argument(self.executable_path.abbreviation_name, self.executable_path.full_name,
-                                     required=not self.are_configs_saved,
-                                     help=self.executable_path.help_message,
-                                     metavar=self.executable_path.metavar,
-                                     default=argparse.SUPPRESS)
+    def add_arguments(self, args_parser):
+        args_parser.add_argument(self.executable_path.abbreviation_name, self.executable_path.full_name,
+                                 required=not self.are_configs_saved,
+                                 help=self.executable_path.help_message,
+                                 metavar=self.executable_path.metavar,
+                                 default=argparse.SUPPRESS)
 
-        argument_parser.add_argument(self.alias.abbreviation_name, self.alias.full_name,
-                                     required=not self.are_configs_saved,
-                                     help=self.alias.help_message,
-                                     metavar=self.alias.metavar,
-                                     default=argparse.SUPPRESS)
+        args_parser.add_argument(self.alias.abbreviation_name, self.alias.full_name,
+                                 required=not self.are_configs_saved,
+                                 help=self.alias.help_message,
+                                 metavar=self.alias.metavar,
+                                 default=argparse.SUPPRESS)
 
-        argument_parser.add_argument(self.days.abbreviation_name, self.days.full_name,
-                                     required=not self.are_configs_saved,
-                                     nargs='*',
-                                     choices=self.days.default,
-                                     help=self.days.help_message,
-                                     metavar=self.days.metavar,
-                                     default=argparse.SUPPRESS)
+        args_parser.add_argument(self.days.abbreviation_name, self.days.full_name,
+                                 required=not self.are_configs_saved,
+                                 nargs='*',
+                                 choices=self.days.default,
+                                 help=self.days.help_message,
+                                 metavar=self.days.metavar,
+                                 default=argparse.SUPPRESS)
 
-        argument_parser.add_argument(self.job.abbreviation_name, self.job.full_name,
-                                     required=not self.are_configs_saved,
-                                     choices=self.job.default,
-                                     help=self.job.help_message,
-                                     metavar=self.job.metavar,
-                                     default=argparse.SUPPRESS)
+        args_parser.add_argument(self.job.abbreviation_name, self.job.full_name,
+                                 required=not self.are_configs_saved,
+                                 choices=self.job.default,
+                                 help=self.job.help_message,
+                                 metavar=self.job.metavar,
+                                 default=argparse.SUPPRESS)
 
-        argument_parser.add_argument(self.time.abbreviation_name, self.time.full_name,
-                                     type=str,
-                                     help=self.time.help_message,
-                                     metavar=self.time.metavar,
-                                     default=self.time.default)
+        args_parser.add_argument(self.time.abbreviation_name, self.time.full_name,
+                                 type=str,
+                                 help=self.time.help_message,
+                                 metavar=self.time.metavar,
+                                 default=self.time.default)
+
+    def process_arguments(self, settings):
+        self.__check_any_errors()
+        self.__process_days(settings[0].user_arguments)
+
+    def __process_days(self, user_arguments):
+        if self.days.name in user_arguments:
+            if user_arguments.days[0] == 'weekdays':
+                user_arguments.days = self.__get_specific_days('weekdays')
+                return
+
+            elif user_arguments.days[0] == 'weekends':
+                user_arguments.days = self.__get_specific_days('weekends')
+                return
+
+            user_arguments.days = self.days.default
+
+    def __check_any_errors(self):
+        try:
+            if not self.__given_argument_path_exists(self.executable_path):
+                throw(self.executable_path + '\' path does not exist.')
+        except (AttributeError, TypeError):
+            pass
+
+    def __get_specific_days(self, days_specified):
+        days = []
+
+        if days_specified == 'weekdays':
+            for i in range(0, 5):
+                days.append(self.days.default[i])
+            return days
+
+        # just weekends
+        for i in range(6, 7):
+            days.append(self.days.default[i])
+        return days
+
+    @staticmethod
+    def __given_argument_path_exists(path):
+        argument_path = Directory(path)
+        return argument_path.exists()

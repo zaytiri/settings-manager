@@ -7,6 +7,9 @@ from configmanager.settings.commands import Commands
 
 class Generic(Arguments):
 
+    def save_condition(self, settings):
+        return True
+
     def __init__(self):
         self.list_all_configs = Argument(name='list_all_configs',
                                          abbreviation_name='-all',
@@ -41,24 +44,28 @@ class Generic(Arguments):
                                metavar="",
                                command=Commands.delete_config)
 
-    def add_arguments(self, argument_parser):
-        argument_parser.add_argument(self.list_all_configs.abbreviation_name, self.list_all_configs.full_name,
-                                     action='store_true',
-                                     help=self.list_all_configs.help_message,
-                                     default=argparse.SUPPRESS)
+    def add_arguments(self, args_parser):
+        args_parser.add_argument(self.list_all_configs.abbreviation_name, self.list_all_configs.full_name,
+                                 action='store_true',
+                                 help=self.list_all_configs.help_message,
+                                 default=argparse.SUPPRESS)
 
-        argument_parser.add_argument(self.stop_startup.abbreviation_name, self.stop_startup.full_name,
-                                     help=self.stop_startup.help_message,
-                                     metavar=self.stop_startup.metavar,
-                                     default=argparse.SUPPRESS)
+        args_parser.add_argument(self.stop_startup.abbreviation_name, self.stop_startup.full_name,
+                                 help=self.stop_startup.help_message,
+                                 metavar=self.stop_startup.metavar,
+                                 default=argparse.SUPPRESS)
 
-        argument_parser.add_argument(self.exit.full_name,
-                                     action=argparse.BooleanOptionalAction,
-                                     help=self.exit.help_message,
-                                     metavar=self.exit.metavar,
-                                     default=argparse.SUPPRESS)
+        args_parser.add_argument(self.exit.full_name,
+                                 action=argparse.BooleanOptionalAction,
+                                 help=self.exit.help_message,
+                                 metavar=self.exit.metavar,
+                                 default=argparse.SUPPRESS)
 
-        argument_parser.add_argument(self.delete.abbreviation_name, self.delete.full_name,
-                                     help=self.delete.help_message,
-                                     metavar=self.delete.metavar,
-                                     default=argparse.SUPPRESS)
+        args_parser.add_argument(self.delete.abbreviation_name, self.delete.full_name,
+                                 help=self.delete.help_message,
+                                 metavar=self.delete.metavar,
+                                 default=argparse.SUPPRESS)
+
+    def process_arguments(self, settings):
+        self.list_all_configs.set_command_args(settings[0].file.path)
+        self.delete.set_command_args((settings[0].user_arguments, settings[0].file.path))

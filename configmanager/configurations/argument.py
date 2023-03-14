@@ -47,17 +47,4 @@ class Argument:
     def set_command_args(self, command_args):
         self.command_args = command_args
 
-    def populate(self, arguments, configurations, is_file_configured):
-        if self.name not in arguments:
-            if not is_file_configured:
-                argument_value = self.default
-            else:
-                try:
-                    argument_value = configurations[self.name]
-                except KeyError:
-                    argument_value = self.default
-        else:
-            argument_value = getattr(arguments, self.name)
 
-        self.set_value(argument_value)
-        return self
