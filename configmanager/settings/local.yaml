@@ -1,0 +1,13 @@
+browser:
+  alias: browser
+  days:
+  - monday
+  - tuesday
+  - wednesday
+  - thursday
+  - friday
+  - saturday
+  - sunday
+  executable_path: C:\Users\ziia\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Vivaldi.lnk
+  job: open_program
+  time: at startup
