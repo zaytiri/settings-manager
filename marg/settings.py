@@ -1,9 +1,9 @@
 import os.path
 
-from configmanager.options import Options
-from configmanager.file import File
-from configmanager.yaml import read_yaml
-from configmanager.log import show
+from marg.options import Options
+from marg.file import File
+from marg.yaml import read_yaml
+from marg.log import show
 
 
 class Settings:

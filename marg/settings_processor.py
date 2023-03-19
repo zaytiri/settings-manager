@@ -1,4 +1,4 @@
-from configmanager.log import throw
+from marg.log import throw
 
 
 class SettingsProcessor:

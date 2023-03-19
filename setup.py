@@ -1,6 +1,6 @@
 from setuptools import setup
 import pathlib
-from configmanager.utils.progsettings import get_version
+from version.progsettings import get_version
 
 here = pathlib.Path(__file__).parent.resolve()
 long_description = (here / "README.md").read_text(encoding="utf-8")
@@ -8,7 +8,7 @@ long_description = (here / "README.md").read_text(encoding="utf-8")
 version = get_version()
 
 setup(
-    name="configmanager",
+    name="marg",
     version=version,
     description="python library to manage configurations from program arguments including doing commands and saving configurations in a yaml file.",
     long_description=long_description,
@@ -27,15 +27,15 @@ setup(
         "Programming Language :: Python :: 3",
     ],
     keywords="manager, configurations, settings, arguments, argparse, yaml, save",
-    package_data={'configmanager': ['progsettings.yaml']},
-    packages=["configmanager", "configmanager.configurations"],
+    package_data={'marg': ['progsettings.yaml']},
+    packages=["marg", "marg"],
     python_requires=">=3.10.6",
     install_requires=[
       "PyYAML~=6.0"
     ],
     # entry_points={
     #     "console_scripts": [
-    #         "configmanager=configmanager:app.main",
+    #         "marg=marg:app.main",
     #     ],
     # }
 )

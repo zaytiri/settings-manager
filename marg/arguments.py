@@ -1,5 +1,5 @@
-from configmanager.argument import Argument
-from configmanager.reflection import get_class_variables
+from marg.argument import Argument
+from marg.reflection import get_class_variables
 
 
 class Arguments:

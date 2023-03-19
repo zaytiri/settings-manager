@@ -1,7 +1,7 @@
-from configmanager.options import Options
-from configmanager.reflection import convert_to_dict
-from configmanager.settings import Settings
-from configmanager.yaml import write_yaml
+from marg.options import Options
+from marg.reflection import convert_to_dict
+from marg.settings import Settings
+from marg.yaml import write_yaml
 
 
 class RepeatableSettings(Settings):
