@@ -1,7 +1,7 @@
 import os
 from datetime import datetime
 
-from configmanager.utils.log import show
+from configmanager.configurations.log import show
 
 
 def open_program(root_path):

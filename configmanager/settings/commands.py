@@ -1,7 +1,7 @@
 import sys
 
 from configmanager.configurations.yaml import read_yaml, write_yaml
-from configmanager.utils.log import show
+from configmanager.configurations.log import show
 
 
 class Commands:

@@ -3,16 +3,11 @@ import argparse
 from configmanager.configurations.argument import Argument
 from configmanager.configurations.arguments import Arguments
 from configmanager.services.directory import Directory
-from configmanager.utils.log import throw
+from configmanager.configurations.log import throw
 
 
 class Specific(Arguments):
     are_configs_saved = False
-
-    def save_condition(self, settings):
-        if self.alias.name in settings[0].user_arguments:
-            return True
-        return False
 
     def __init__(self):
         self.alias = Argument(name='alias',
@@ -106,12 +101,12 @@ class Specific(Arguments):
             if user_arguments.days[0] == 'weekdays':
                 user_arguments.days = self.__get_specific_days('weekdays')
                 return
-
             elif user_arguments.days[0] == 'weekends':
                 user_arguments.days = self.__get_specific_days('weekends')
                 return
-
-            user_arguments.days = self.days.default
+            elif user_arguments.days[0] == 'everyday':
+                user_arguments.days = self.__get_specific_days('everyday')
+                return
 
     def __check_any_errors(self):
         try:
@@ -128,8 +123,12 @@ class Specific(Arguments):
                 days.append(self.days.default[i])
             return days
 
-        # just weekends
-        for i in range(6, 7):
+        if days_specified == 'weekends':
+            for i in range(5, 7):
+                days.append(self.days.default[i])
+            return days
+
+        for i in range(0, 7):
             days.append(self.days.default[i])
         return days
 

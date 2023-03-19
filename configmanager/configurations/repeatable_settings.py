@@ -1,12 +1,14 @@
+from configmanager.configurations.options import Options
+from configmanager.configurations.reflection import convert_to_dict
 from configmanager.configurations.settings import Settings
-from configmanager.configurations.yaml import read_yaml, write_yaml
+from configmanager.configurations.yaml import write_yaml
 
 
 class RepeatableSettings(Settings):
     __main_arg = {'name': '', 'value': ''}
 
-    def __init__(self, path, program_arguments=None, show_saved_configurations=False):
-        super().__init__(path, program_arguments, show_saved_configurations)
+    def __init__(self, path, program_arguments=None, options=Options()):
+        super().__init__(path, program_arguments, options)
 
     def __process_main_arg(self):
         for arg in self.program_arguments.to_list():
@@ -17,25 +19,43 @@ class RepeatableSettings(Settings):
         if self.__main_arg['name'] in self.user_arguments:
             self.__main_arg['value'] = getattr(self.user_arguments, self.__main_arg['name'])
 
-    def __set_configurations(self):
+    def set(self):
         self.__process_main_arg()
 
-        if self.__main_arg['name'] in self.user_arguments:
-            self.__populate_configurations(self.settings_from_file[self.__main_arg['value']])
+        if not self.exists():
+            user_arguments_dict = convert_to_dict(self.user_arguments)
+            try:
+                self.configs[self.__main_arg['value']] = self.set_arguments_values(user_arguments_dict)
+            except KeyError:
+                pass
             return
 
         for saved_setting in self.settings_from_file:
-            self.__populate_configurations(self.settings_from_file[saved_setting])
+            self.configs[saved_setting] = self.set_arguments_values(self.settings_from_file[saved_setting])
 
-    def __save_configurations(self):
-        arguments = self.program_arguments.to_list([True])
-        values_to_save = {}
-        for arg in arguments:
-            values_to_save[arg.name] = arg.value
+        if self.__main_arg['name'] not in self.user_arguments:
+            return
 
-        self.settings_from_file[self.__main_arg['value']] = values_to_save
+        user_arguments_dict = convert_to_dict(self.user_arguments)
+        self.configs[self.__main_arg['value']] = self.set_arguments_values(user_arguments_dict)
 
-        write_yaml(self.file.path, self.settings_from_file)
+        print()
 
-        if self.show_saved_configurations:
-            self.__show_saved_configurations()
+    def save_when_main_arg_exist(self):
+        if not self.options.save_main_arg_exists:
+            return self.options.save_main_arg_exists
+
+        if self.__main_arg['name'] in self.user_arguments:
+            return True
+        return False
+
+    def save(self):
+        if self.save_when_different() or self.save_when_main_arg_exist() or self.options.custom_save:
+            self.settings_from_file[self.__main_arg['value']] = self.values_to_save
+
+            write_yaml(self.file.path, self.settings_from_file)
+
+            if self.options.show_saved:
+                self.show(self.values_to_save)
+
+        return self.configs

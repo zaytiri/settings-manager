@@ -48,6 +48,3 @@ class Arguments:
 
     def process_arguments(self, settings):
         raise NotImplementedError("This method needs to be implemented.")
-
-    def save_condition(self, settings):
-        raise NotImplementedError("This method needs to be implemented.")

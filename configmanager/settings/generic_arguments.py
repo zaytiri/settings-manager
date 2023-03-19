@@ -6,10 +6,6 @@ from configmanager.settings.commands import Commands
 
 
 class Generic(Arguments):
-
-    def save_condition(self, settings):
-        return True
-
     def __init__(self):
         self.list_all_configs = Argument(name='list_all_configs',
                                          abbreviation_name='-all',

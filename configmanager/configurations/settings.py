@@ -1,44 +1,31 @@
-from configmanager.configurations.argument import Argument
+from configmanager.configurations.options import Options
 from configmanager.services.directory import Directory
 from configmanager.configurations.file import File
-from configmanager.configurations.yaml import read_yaml, write_yaml
-from configmanager.utils.log import show
-from configmanager.configurations.reflection import get_class_variables
+from configmanager.configurations.yaml import read_yaml
+from configmanager.configurations.log import show
 
 
 class Settings:
-    program_arguments = None
-    settings_from_file = {}
-    values_to_save = {}
-    file = None
-    save_condition = False
-    user_arguments = None
 
-    def __init__(self, path, program_arguments=None, show_saved_configurations=False):
+    def __init__(self, path, program_arguments=None, options=Options()):
         self.file = File(path)
         self.program_arguments = program_arguments
-        self.show_saved_configurations = show_saved_configurations
+        self.settings_from_file = {}
+        self.values_to_save = {}
+        self.user_arguments = None
+        self.configs = {}
+        self.options = options
 
-    def process(self):
-        self.__do_commands()
+        if self.exists():
+            self.load()
 
-        if self.is_configured():
-            self.__get_configs_from_file()
-
-        self.__set_configurations()
-
-        if self.save_condition:
-            self.__save_configurations()
-
-        return self.program_arguments
-
-    def __set_configurations(self):
+    def set(self):
         raise NotImplementedError("This method needs to be implemented.")
 
-    def __save_configurations(self):
+    def save(self):
         raise NotImplementedError("This method needs to be implemented.")
 
-    def __do_commands(self):
+    def do_commands(self):
         non_saved_arguments = self.program_arguments.to_list(is_saved=[False])
         for arg in non_saved_arguments:
             if arg.name in self.user_arguments:
@@ -50,10 +37,10 @@ class Settings:
                 else:
                     arg.command()
 
-    def __get_configs_from_file(self):
+    def load(self):
         self.settings_from_file = read_yaml(self.file.path)
 
-    def is_configured(self):
+    def exists(self):
         directory = Directory(self.file.path)
         if not directory.exists():
             return False
@@ -62,42 +49,39 @@ class Settings:
             return False
         return True
 
-    def __populate_configurations(self, values_from_file):
-        arguments = self.program_arguments.to_list()
+    def set_arguments_values(self, values_from_file):
+        program_arguments = self.program_arguments.__class__()
+        arguments = program_arguments.to_list()
 
         for configuration in arguments:
-            self.__populate(self.user_arguments, values_from_file)
+            self.__set_settings_value(configuration, values_from_file)
 
-            if configuration.save_condition:
+            if configuration.to_save:
                 self.values_to_save[configuration.name] = configuration.value
 
-        self.program_arguments.from_list(arguments)
+        program_arguments.from_list(arguments)
 
-    def __populate(self, config, values_from_file):
-        if config.name in self.user_arguments:
-            argument_value = getattr(self.user_arguments, config.name)
-            config.set_value(argument_value)
+        return program_arguments
 
-        if self.is_configured():
+    def __set_settings_value(self, config, values_from_file):
+        if config.name in values_from_file:
             argument_value = values_from_file[config.name]
         else:
             argument_value = config.default
 
         config.set_value(argument_value)
 
-    def __show_saved_configurations(self):
-        class_variables = get_class_variables(self.program_arguments)
+    def save_when_different(self):
+        if not self.options.save_different:
+            return self.options.save_different
 
-        show('Saved configurations:')
-        message = ''
-        for var in class_variables:
-            if not isinstance(var[1], Argument):
-                continue
+        if self.settings_from_file == self.values_to_save:
+            return False
+        return True
 
-            arg = Argument().set_argument(var[1])
+    def show(self, arguments):
+        message = 'Saved configurations:'
+        for name, value in arguments.items():
+            message += '\n\t\t\t' + name + ': ' + str(value)
 
-            if arg.save_condition in [True]:
-                message += '\n\t\t\t' + arg.name + ': ' + str(arg.value)
-
-        show(message)
-        show('\nConfiguration file path: ' + self.file.path)
+        show(message + '\n\n\t\tConfiguration file path: ' + self.file.path)

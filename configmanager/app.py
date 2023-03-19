@@ -1,13 +1,14 @@
 import sys
 from configmanager.settings.manager import Manager
 from configmanager.jobs import open_program
-from configmanager.utils.log import show
+from configmanager.configurations.log import show
 from scheduler import Scheduler
 
 
 def main():
     manager = Manager()
     arguments = manager.configure_arguments()
+    sys.exit()
 
     if manager.is_to_configure:
         sys.exit()
