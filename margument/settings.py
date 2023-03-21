@@ -29,6 +29,9 @@ class Settings:
     def do_commands(self):
         non_saved_arguments = self.program_arguments.to_list(is_saved=[False])
         for arg in non_saved_arguments:
+            if arg.command is None:
+                continue
+
             if arg.name in self.user_arguments:
                 if arg.command_args is not None:
                     if isinstance(arg.command_args, tuple):
