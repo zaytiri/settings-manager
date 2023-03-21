@@ -8,7 +8,7 @@ long_description = (here / "README.md").read_text(encoding="utf-8")
 version = get_version()
 
 setup(
-    name="marg",
+    name="margument",
     version=version,
     description="python library to manage configurations from program arguments including doing commands and saving configurations in a yaml file.",
     long_description=long_description,
@@ -27,15 +27,15 @@ setup(
         "Programming Language :: Python :: 3",
     ],
     keywords="manager, configurations, settings, arguments, argparse, yaml, save",
-    package_data={'marg': ['progsettings.yaml']},
-    packages=["marg", "marg"],
+    package_data={'margument': ['progsettings.yaml']},
+    packages=["margument", "margument"],
     python_requires=">=3.10.6",
     install_requires=[
       "PyYAML~=6.0"
     ],
     # entry_points={
     #     "console_scripts": [
-    #         "marg=marg:app.main",
+    #         "margument=margument:app.main",
     #     ],
     # }
 )

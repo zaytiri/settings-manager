@@ -1,9 +1,9 @@
 import os.path
 
-from marg.options import Options
-from marg.file import File
-from marg.yaml import read_yaml
-from marg.log import show
+from margument.options import Options
+from margument.file import File
+from margument.yaml import read_yaml
+from margument.log import show
 
 
 class Settings:

@@ -1,5 +1,5 @@
-from marg.argument import Argument
-from marg.reflection import get_class_variables
+from margument.argument import Argument
+from margument.reflection import get_class_variables
 
 
 class Arguments:

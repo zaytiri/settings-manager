@@ -1,7 +1,7 @@
-from marg.options import Options
-from marg.reflection import convert_to_dict
-from marg.settings import Settings
-from marg.yaml import write_yaml
+from margument.options import Options
+from margument.reflection import convert_to_dict
+from margument.settings import Settings
+from margument.yaml import write_yaml
 
 
 class RepeatableSettings(Settings):

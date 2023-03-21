@@ -1,4 +1,4 @@
-from marg.log import throw
+from margument.log import throw
 
 
 class SettingsProcessor:
