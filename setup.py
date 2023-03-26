@@ -1,6 +1,6 @@
 from setuptools import setup
 import pathlib
-from version.progsettings import get_version
+from margument.version.progsettings import get_version
 
 here = pathlib.Path(__file__).parent.resolve()
 long_description = (here / "README.md").read_text(encoding="utf-8")
@@ -28,7 +28,7 @@ setup(
     ],
     keywords="manager, configurations, settings, arguments, argparse, yaml, save",
     package_data={'margument': ['progsettings.yaml']},
-    packages=["margument", "margument"],
+    packages=["margument", "margument.version"],
     python_requires=">=3.10.6",
     install_requires=[
       "PyYAML~=6.0"
