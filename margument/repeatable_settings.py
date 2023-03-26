@@ -22,8 +22,9 @@ class RepeatableSettings(Settings):
     def set(self):
         self.__process_main_arg()
 
+        user_arguments_dict = convert_to_dict(self.user_arguments)
+
         if not self.exists():
-            user_arguments_dict = convert_to_dict(self.user_arguments)
             try:
                 self.configs[self.__main_arg['value']] = self.set_arguments_values(user_arguments_dict)
             except KeyError:
@@ -33,13 +34,25 @@ class RepeatableSettings(Settings):
         for saved_setting in self.settings_from_file:
             self.configs[saved_setting] = self.set_arguments_values(self.settings_from_file[saved_setting])
 
-        if self.__main_arg['name'] not in self.user_arguments:
-            return
+        if self.__main_arg['value'] not in self.configs:
+            self.configs[self.__main_arg['value']] = self.set_arguments_values(user_arguments_dict)
 
-        user_arguments_dict = convert_to_dict(self.user_arguments)
-        self.configs[self.__main_arg['value']] = self.set_arguments_values(user_arguments_dict)
+    def set_settings_value(self, config, values_from_file):
+        is_main = False
+        if self.__main_arg['value'] != '':
+            is_main = values_from_file[self.__main_arg['name']] == self.__main_arg['value']
 
-        print()
+        if config.name in self.user_arguments and is_main:
+            value = getattr(self.user_arguments, config.name)
+        else:
+            if config.name in values_from_file:
+                value = values_from_file[config.name]
+            else:
+                value = config.default
+
+        config.set_value(value)
+        if config.to_save and is_main:
+            self.values_to_save[config.name] = config.value
 
     def save_when_main_arg_exist(self):
         if not self.options.save_main_arg_exists:

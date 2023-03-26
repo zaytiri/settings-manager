@@ -4,7 +4,7 @@ from margument.options import Options
 from margument.file import File
 from margument.yaml import read_yaml
 from margument.log import show
-
+from margument.reflection import convert_to_dict
 
 class Settings:
 
@@ -57,22 +57,14 @@ class Settings:
         arguments = program_arguments.to_list()
 
         for configuration in arguments:
-            self.__set_settings_value(configuration, values_from_file)
-
-            if configuration.to_save:
-                self.values_to_save[configuration.name] = configuration.value
+            self.set_settings_value(configuration, values_from_file)
 
         program_arguments.from_list(arguments)
 
         return program_arguments
 
-    def __set_settings_value(self, config, values_from_file):
-        if config.name in values_from_file:
-            argument_value = values_from_file[config.name]
-        else:
-            argument_value = config.default
-
-        config.set_value(argument_value)
+    def set_settings_value(self, config, values_from_file):
+        raise NotImplementedError("This method needs to be implemented.")
 
     def save_when_different(self):
         if not self.options.save_different:

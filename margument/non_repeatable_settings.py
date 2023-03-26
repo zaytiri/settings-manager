@@ -9,19 +9,20 @@ class NonRepeatableSettings(Settings):
         super().__init__(path, program_arguments, options)
 
     def set(self):
-        arguments = self.program_arguments.to_list()
-        for arg in arguments:
-            if arg.name in self.user_arguments:
-                self.configs[arg.name] = getattr(self.user_arguments, arg.name)
-                continue
+        self.configs = self.set_arguments_values(self.settings_from_file)
 
-            if arg.name in self.settings_from_file:
-                self.configs[arg.name] = self.settings_from_file[arg.name]
-                continue
+    def set_settings_value(self, config, values_from_file):
+        if config.name in self.user_arguments:
+            value = getattr(self.user_arguments, config.name)
+        elif config.name in self.settings_from_file:
+            value = self.settings_from_file[config.name]
+        else:
+            value = config.default
 
-            self.configs[arg.name] = arg.default
+        config.set_value(value)
 
-        self.configs = self.set_arguments_values(self.configs)
+        if config.to_save:
+            self.values_to_save[config.name] = config.value
 
     def save(self):
         if self.save_when_different() or self.options.custom_save:
