@@ -34,6 +34,9 @@ class RepeatableSettings(Settings):
         for saved_setting in self.settings_from_file:
             self.configs[saved_setting] = self.set_arguments_values(self.settings_from_file[saved_setting])
 
+        if self.__main_arg['name'] not in self.user_arguments:
+            return
+
         if self.__main_arg['value'] not in self.configs:
             self.configs[self.__main_arg['value']] = self.set_arguments_values(user_arguments_dict)
 
