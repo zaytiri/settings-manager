@@ -11,6 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed
 - Removed
 
+## [1.0.3] - 2023-03-27
+
+### Fixed
+- fixed issue where an invalid configuration was being added in the repeatable settings, if there was no main argument given in the command.
+
 ## [1.0.2] - 2023-03-26
 
 ### Fixed
