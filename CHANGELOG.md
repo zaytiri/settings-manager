@@ -11,6 +11,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed
 - Removed
 
+## [1.1.0] - 2023-04-09
+
+### Added
+- better document all methods and arguments.
+- an updated readme with better explanations on how to use.
+- choices (from argsparse) can be now defined in the argument.
+
 ## [1.0.3] - 2023-03-27
 
 ### Fixed
