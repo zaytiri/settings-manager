@@ -11,7 +11,7 @@ class Argument:
                  is_main=False,
                  command=None,
                  command_args=None,
-                 choices=None,
+                 choices=None):
         """
         :param name: the name of the argument, ex: alias (must be the same as full_name)
         :param abbreviation_name: the abbreviation name for the argument, ex: -a (see argsparse documentation https://docs.python.org/3/library/argparse.html#name-or-flags)
@@ -24,8 +24,7 @@ class Argument:
         :param is_main: a boolean defining if this argument is a main argument. There must be 1 if to use on RepeatableSettings class
         :param command: the method that this argument should call when it's present on the arguments parsed and provided by the user.
         :param command_args: all the arguments the previous method needs to have. If more than one argument, please wrap them in (), ex: (arg1, arg2)
-        :param choices: a list of choices required by the argument (see argsparse documentation
-        https://docs.python.org/3/library/argparse.html#choices)
+        :param choices: a list of choices required by the argument (see argsparse documentation https://docs.python.org/3/library/argparse.html#choices)
         """
         self.name = name
         self.abbreviation_name = abbreviation_name
@@ -54,7 +53,7 @@ class Argument:
             is_main=argument.is_main,
             command=argument.command,
             command_args=argument.command_args,
-            choices=argument.choices,
+            choices=argument.choices)
 
     def set_value(self, value):
         self.value = value
