@@ -4,7 +4,7 @@ from margument.options import Options
 from margument.file import File
 from margument.yaml import read_yaml
 from margument.log import show
-from margument.reflection import convert_to_dict
+
 
 class Settings:
 

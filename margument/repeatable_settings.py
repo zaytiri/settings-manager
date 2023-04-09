@@ -1,3 +1,4 @@
+from margument.log import throw
 from margument.options import Options
 from margument.reflection import convert_to_dict
 from margument.settings import Settings
@@ -11,10 +12,15 @@ class RepeatableSettings(Settings):
         super().__init__(path, program_arguments, options)
 
     def __process_main_arg(self):
+        main_arg_exists = False
         for arg in self.program_arguments.to_list():
             if arg.is_main:
+                main_arg_exists = True
                 self.__main_arg['name'] = arg.name
                 break
+
+        if not main_arg_exists:
+            throw("No main argument defined.")
 
         if self.__main_arg['name'] in self.user_arguments:
             self.__main_arg['value'] = getattr(self.user_arguments, self.__main_arg['name'])
