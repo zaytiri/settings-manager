@@ -21,8 +21,8 @@ class SettingsProcessor:
         user_arguments = None
         try:
             user_arguments = self.args_parser.parse_args()
-        except AssertionError:
-            throw("Required arguments were not specified.")
+        except AssertionError as ex:
+            throw(ex)
 
         parsed_settings = {}
         for setting in self.settings:
