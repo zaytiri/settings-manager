@@ -11,6 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed
 - Removed
 
+## [1.1.2] - 2023-06-07
+
+### Changed
+- error message for argsparse.
+
 ## [1.1.1] - 2023-04-09
 
 ### Fixed
