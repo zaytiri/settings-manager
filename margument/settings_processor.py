@@ -10,7 +10,7 @@ class SettingsProcessor:
         self.settings = settings
         self.args_parser = args_parser
 
-    def run(self):
+    def run(self, custom_args=None):
         """
         This method will iterate through all the given settings and will process each one according to their specifications.
         :return: A dictionary of all settings given each containing a list of all parsed configurations from the user and/or the external file .
@@ -18,7 +18,10 @@ class SettingsProcessor:
         for setting in self.settings:
             setting.program_arguments.add_arguments(self.args_parser)
 
-        user_arguments = self.args_parser.parse_args()
+        if custom_args is not None:
+            user_arguments = self.args_parser.parse_args(custom_args)
+        else:
+            user_arguments = self.args_parser.parse_args()
 
         parsed_settings = {}
         for setting in self.settings:
