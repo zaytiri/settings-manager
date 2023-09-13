@@ -11,6 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed
 - Removed
 
+## [1.1.4] - 2023-09-13
+
+### Added
+- optional parameter for main method run(). Custom arguments can now be given to be read by argsparse library when parsing arguments as well as getting arguments from the command line.
+
 ## [1.1.3] - 2023-06-07
 
 ### Changed
